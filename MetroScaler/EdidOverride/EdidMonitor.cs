@@ -68,7 +68,12 @@ namespace MetroScaler.EdidOverride
 
         public void ResetEdidOverride()
         {
-            Registry.LocalMachine.DeleteSubKey(this.EdidOverrideRegistryPath);
+            try
+            {
+                Registry.LocalMachine.DeleteSubKey(this.EdidOverrideRegistryPath);
+            }
+            catch(ArgumentException a)
+            { }
             Debug.WriteLine("Edid override has been reset");
         }
 

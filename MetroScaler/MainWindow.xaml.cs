@@ -70,13 +70,13 @@ namespace MetroScaler
             try
             {
                 this.selectedMonitor.ResetEdidOverride();
+                this.showRestartDialog("The screen size has been reset. Restart your computer to see the changes.");
             }
             catch (Exception c)
             {
                 Debug.WriteLine(c.Message);
                 MessageBoxResult result = MessageBox.Show("Could not write to the registry. Make sure to run as administrator.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            this.showRestartDialog("The screen size has been reset. Restart your computer to see the changes.");
         }
 
         private void btnScale_Click(object sender, RoutedEventArgs e)
@@ -85,14 +85,14 @@ namespace MetroScaler
             {
                 this.selectedMonitor.ScaleToInches(this.sliderToInches(this.slider.Value));
                 this.selectedMonitor.WriteEdidOverride();
+
+                this.showRestartDialog("The screen size for " + this.selectedMonitor.Name + " has been set to " + this.sliderToInches(this.slider.Value).ToString() + " inches. Restart your computer to see the changes.");
             }
             catch (Exception c)
             {
                 Debug.WriteLine(c.Message);
                 MessageBoxResult result = MessageBox.Show("Could not write to the registry. Make sure to run as administrator.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-
-            this.showRestartDialog("The screen size for " + this.selectedMonitor.Name + " has been set to " + this.sliderToInches(this.slider.Value).ToString() + " inches. Restart your computer to see the changes.");
         }
 
         private void showRestartDialog(string message)
