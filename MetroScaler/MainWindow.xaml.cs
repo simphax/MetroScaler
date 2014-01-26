@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using MetroScaler.EdidOverride;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace MetroScaler
             InitializeComponent();
             this.slider.Value = 5.0;
 
+            EdidOverrideUtils.test();
+            /*
             try
             {
                 this.scalingRegisterKey = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Scaling");
@@ -51,6 +54,7 @@ namespace MetroScaler
                         break;
                 }
             }
+            */
         }
 
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
