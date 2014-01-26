@@ -29,6 +29,10 @@ namespace MetroScaler.EdidOverride
             get { return EDID[EDID_HEIGHT]; }
             set { EDID[EDID_HEIGHT] = value; }
         }
+        public double Inches
+        {
+            get { return Math.Sqrt(Math.Pow(this.Width,2)+Math.Pow(this.Height,2))/2.54; }
+        }
 
         private string DeviceRegistryPath { get { return "SYSTEM\\CurrentControlSet\\Enum\\" + this.InstanceName.Substring(0, this.InstanceName.Length - 2) + "\\Device Parameters"; } }
         private string EdidOverrideRegistryPath { get { return this.DeviceRegistryPath + "\\EDID_OVERRIDE"; } }
@@ -75,9 +79,14 @@ namespace MetroScaler.EdidOverride
             {
                 checksum += this.EDID[i];
             }
-            checksum = (byte)(0xFF - checksum);
+            checksum = (byte)(256 - checksum);
             Debug.WriteLine("Checksum = " + checksum);
             this.EDID[127] = checksum;
+        }
+
+        override public string ToString()
+        {
+            return this.Name;
         }
     }
 }

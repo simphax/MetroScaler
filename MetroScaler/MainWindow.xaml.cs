@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
@@ -26,35 +27,24 @@ namespace MetroScaler
 
         private string appName = "Metro Scaler";
 
-        //HKEY_LOCAL_MACHINE->SOFTWARE->Microsoft->Windows->CurrentVersion->Explorer->Scaling
-        private RegistryKey scalingRegisterKey;
+        private List<EdidMonitor> allMonitors;
+        private EdidMonitor selectedMonitor;
 
-        private string valueKey = "MonitorSize";
-
+        private const double MIN_INCHES = 8;
+        private const double MAX_INCHES = 25;
 
         public MainWindow()
         {
             InitializeComponent();
             this.slider.Value = 5.0;
 
-            EdidOverrideUtils.test();
-            /*
-            try
+            allMonitors = EdidOverrideUtils.GetMonitorList();
+
+            foreach(EdidMonitor monitor in allMonitors)
             {
-                this.scalingRegisterKey = Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Scaling");
+                this.monitors_combobox.ItemsSource = allMonitors;
+                this.monitors_combobox.SelectedIndex = 0;
             }
-            catch (Exception e)
-            {
-                MessageBoxResult result = MessageBox.Show("You have to start this application as an administrator", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
-                // Process message box results 
-                switch (result)
-                {
-                    case MessageBoxResult.OK:
-                        Application.Current.Shutdown();
-                        break;
-                }
-            }
-            */
         }
 
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -79,29 +69,30 @@ namespace MetroScaler
         {
             try
             {
-                scalingRegisterKey.DeleteValue(this.valueKey);
+                this.selectedMonitor.ResetEdidOverride();
             }
             catch (Exception c)
             {
-                MessageBoxResult result = MessageBox.Show("Could not set the value in the registry. Try again.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
-
+                Debug.WriteLine(c.Message);
+                MessageBoxResult result = MessageBox.Show("Could not write to the registry. Make sure to run as administrator.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            this.showRestartDialog("The scaling setting has been reset, restart your computer to see the changes.");
+            this.showRestartDialog("The screen size has been reset. Restart your computer to see the changes.");
         }
 
         private void btnScale_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                scalingRegisterKey.SetValue(this.valueKey, this.sliderToInches(this.slider.Value).ToString(), RegistryValueKind.String);
+                this.selectedMonitor.ScaleToInches(this.sliderToInches(this.slider.Value));
+                this.selectedMonitor.WriteEdidOverride();
             }
             catch (Exception c)
             {
-                MessageBoxResult result = MessageBox.Show("Could not set value in the registry. Try again.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
-                
+                Debug.WriteLine(c.Message);
+                MessageBoxResult result = MessageBox.Show("Could not write to the registry. Make sure to run as administrator.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
-            this.showRestartDialog("The scaling has been set to " + this.sliderToInches(this.slider.Value).ToString() + " inches, restart your computer to see the changes.");
+            this.showRestartDialog("The screen size for " + this.selectedMonitor.Name + " has been set to " + this.sliderToInches(this.slider.Value).ToString() + " inches. Restart your computer to see the changes.");
         }
 
         private void showRestartDialog(string message)
@@ -111,11 +102,19 @@ namespace MetroScaler
 
         private double sliderToInches(double sliderVal)
         {
-            double min = 5;
-            double max = 20;
-            double round = 0.5;
+            double round = 0.1;
+            return ((int)((MIN_INCHES + sliderVal * (MAX_INCHES - MIN_INCHES)) / round)) * round;
+        }
+        private double inchesToSlider(double inches)
+        {
+            return (inches - MIN_INCHES) / (MAX_INCHES - MIN_INCHES);
+        }
 
-            return ((int)((min + (sliderVal / 10) * max) / round)) * round;
+        private void monitors_combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = (ComboBox)sender;
+            this.selectedMonitor = (EdidMonitor)cb.SelectedItem;
+            this.slider.Value = inchesToSlider(this.selectedMonitor.Inches);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace MetroScaler.EdidOverride
                     monitorInfo.InstanceName = (string)queryObj["InstanceName"];
 
                     StringBuilder sbuilder = new StringBuilder();
-                    for (int i = 0; i < (UInt16)queryObj["UserFriendlyNameLength"];i++ )
+                    for (int i = 0; i < (UInt16)queryObj["UserFriendlyNameLength"]-1;i++ )
                     {
                         sbuilder.Append((char)((UInt16[])queryObj["UserFriendlyName"])[i]);
                     }
