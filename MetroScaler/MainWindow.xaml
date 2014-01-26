@@ -7,7 +7,7 @@
         <ComboBox SelectionChanged="monitors_combobox_SelectionChanged" Name="monitors_combobox" Margin="108,14,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="202">
         </ComboBox>
         <Image Name="preview" HorizontalAlignment="Left" Height="169" Margin="10,49,0,0" VerticalAlignment="Top" Width="300" Source="Resources/10.png"/>
-        <Slider Name="slider" HorizontalAlignment="Left" Margin="10,278,0,0" VerticalAlignment="Top" Height="20" Width="300" ValueChanged="slider_ValueChanged" Maximum="1"/>
+        <Slider Name="slider" HorizontalAlignment="Left" Margin="10,278,0,0" VerticalAlignment="Top" Height="20" Width="300" ValueChanged="slider_ValueChanged" Maximum="1" TickFrequency="0.1" Interval="1" SmallChange="0.01" LargeChange="0.1"/>
         <Label Content="Set display size to" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Height="31" Margin="10,235,0,0" VerticalAlignment="Top" Width="192" FontFamily="Segoe UI Light" FontSize="16"/>
         <Label Name="valueLabel" Content="15&quot;" HorizontalAlignment="Left" Margin="210,229,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI Semibold" Width="100"/>
         <Button Content="Scale" HorizontalAlignment="Left" Margin="258,332,0,0" VerticalAlignment="Top" Width="52" Height="35" Background="#FFECECEC" BorderBrush="#FFD1D1D1" FontFamily="Segoe UI Semibold" Click="btnScale_Click"/>

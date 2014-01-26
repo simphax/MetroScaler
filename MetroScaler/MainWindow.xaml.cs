@@ -31,7 +31,7 @@ namespace MetroScaler
         private EdidMonitor selectedMonitor;
 
         private const double MIN_INCHES = 8;
-        private const double MAX_INCHES = 25;
+        private const double MAX_INCHES = 36;
 
         public MainWindow()
         {

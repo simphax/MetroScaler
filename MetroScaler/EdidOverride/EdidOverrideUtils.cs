@@ -13,16 +13,16 @@ namespace MetroScaler.EdidOverride
     class EdidOverrideUtils
     {
 
-        public static void test()
+        private static string convertUIntToString(UInt16[] array)
         {
-            Debug.WriteLine("test");
-
-            List<EdidMonitor> monlist = GetMonitorList();
-
-            monlist[0].ScaleToInches(12);
-            monlist[0].WriteEdidOverride();
-
-            Debug.WriteLine("done");
+            int length = 1;
+            while (length < array.Length && array[length] != 0)
+            {
+                length++;
+            }
+            char[] charArray = new char[length];
+            Array.Copy(array, charArray, length);
+            return new String(charArray);
         }
 
         public static List<EdidMonitor> GetMonitorList()
@@ -43,14 +43,10 @@ namespace MetroScaler.EdidOverride
                     Debug.WriteLine("InstanceName: {0}", queryObj["InstanceName"]);
                     monitorInfo.InstanceName = (string)queryObj["InstanceName"];
 
-                    StringBuilder sbuilder = new StringBuilder();
-                    for (int i = 0; i < (UInt16)queryObj["UserFriendlyNameLength"]-1;i++ )
-                    {
-                        sbuilder.Append((char)((UInt16[])queryObj["UserFriendlyName"])[i]);
-                    }
-
-                    Debug.WriteLine("UserFriendlyName: " + sbuilder.ToString());
-                    monitorInfo.Name = sbuilder.ToString();
+                    string name = convertUIntToString((UInt16[])queryObj["UserFriendlyName"]);
+                    
+                    Debug.WriteLine("UserFriendlyName: " + name);
+                    monitorInfo.Name = name;
 
                     string PNP = queryObj["InstanceName"].ToString();
                     PNP = PNP.Substring(0, PNP.Length - 2);  // remove _0
