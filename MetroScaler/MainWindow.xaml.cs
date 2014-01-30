@@ -57,7 +57,7 @@ namespace MetroScaler
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double inches = this.sliderToInches(e.NewValue);
-            this.valueLabel.Content = inches + "\"";
+            this.valueLabel.Content = inches.ToString("F1") + "\"";
             if (inches < 12.5)
             {
                 this.preview.Source = Imaging.CreateBitmapSourceFromBitmap(MetroScaler.Properties.Resources._10);
