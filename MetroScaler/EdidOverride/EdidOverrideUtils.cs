@@ -79,12 +79,34 @@ namespace MetroScaler.EdidOverride
 
                                     Debug.WriteLine("Monitor width = " + monitorInfo.Width + ", height=" + monitorInfo.Height);
 
+                                    string instanceName = (string)queryObj["InstanceName"];
+                                    instanceName = instanceName.Replace("\\","\\\\");
+                                    string query = String.Format("SELECT * FROM WmiMonitorDescriptorMethods WHERE InstanceName = '{0}'",instanceName);
+                                    //string query = "SELECT * FROM WmiMonitorDescriptorMethods";
+                                    ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("root\\WMI", query);
+                                    Debug.WriteLine("-----------------");
+                                    foreach (ManagementObject descMethodObj in searcher2.Get())
+                                    {
+                                        ManagementBaseObject inParams = descMethodObj.GetMethodParameters("WmiGetMonitorRawEEdidV1Block");
+                                        inParams["BlockId"] = 0;
+
+                                        ManagementBaseObject outParams = null;
+                                        outParams = descMethodObj.InvokeMethod("WmiGetMonitorRawEEdidV1Block", inParams, null);
+                                        Debug.WriteLine("Returned a block of type {0}, having a content of type {1} ",
+                                                            outParams["BlockType"], outParams["BlockContent"].GetType());
+                                        Debug.WriteLine("{0}", ((byte[])outParams["BlockContent"]).Length);
+
+                                        byte[] rawedid = ((byte[])outParams["BlockContent"]);
+
+                                        monitorInfo.RawEDID = rawedid;
+                                    }
+
                                     monitorList.Add(monitorInfo);
                                 }
 
                             }
-                            regKey.Close();
                         }
+                        regKey.Close();
                     }
 
                 }

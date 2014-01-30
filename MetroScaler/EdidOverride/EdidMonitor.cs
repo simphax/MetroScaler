@@ -19,6 +19,7 @@ namespace MetroScaler.EdidOverride
         public bool Active;
         public string InstanceName;
         public byte[] EDID;
+        public byte[] RawEDID;
         public byte Width
         {
             get { return EDID[EDID_WIDTH]; }
@@ -71,6 +72,8 @@ namespace MetroScaler.EdidOverride
             try
             {
                 Registry.LocalMachine.DeleteSubKey(this.EdidOverrideRegistryPath);
+                this.Width = RawEDID[EDID_WIDTH];
+                this.Height = RawEDID[EDID_HEIGHT];
             }
             catch(ArgumentException a)
             { }

@@ -36,7 +36,6 @@ namespace MetroScaler
         public MainWindow()
         {
             InitializeComponent();
-            this.slider.Value = 5.0;
 
             allMonitors = EdidOverrideUtils.GetMonitorList();
 
@@ -70,6 +69,7 @@ namespace MetroScaler
             try
             {
                 this.selectedMonitor.ResetEdidOverride();
+                this.slider.Value = inchesToSlider(this.selectedMonitor.Inches);
                 this.showRestartDialog("The screen size has been reset. Restart your computer to see the changes.");
             }
             catch (Exception c)
