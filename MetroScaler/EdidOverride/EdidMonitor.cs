@@ -47,8 +47,8 @@ namespace MetroScaler.EdidOverride
             double height = Math.Sqrt(Math.Pow(diagonal, 2) / (1 + Math.Pow(ratio, 2)));
             double width = ratio * height;
 
-            this.Width = (byte)(width + 0.5);
-            this.Height = (byte)(height + 0.5);
+            this.Width = (byte)Math.Round(width);
+            this.Height = (byte)Math.Round(height);
 
             Debug.WriteLine("New monitor width = " + this.Width + ", height=" + this.Height);
         }

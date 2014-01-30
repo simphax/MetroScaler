@@ -70,6 +70,7 @@ namespace MetroScaler
             try
             {
                 this.selectedMonitor.ResetEdidOverride();
+                this.valueLabel.Content = "?";
                 this.showRestartDialog("The screen size has been reset. Restart your computer to see the changes.");
             }
             catch (Exception c)
@@ -84,8 +85,8 @@ namespace MetroScaler
             try
             {
                 this.selectedMonitor.ScaleToInches(this.sliderToInches(this.slider.Value));
+                this.slider.Value = this.inchesToSlider(this.selectedMonitor.Inches);
                 this.selectedMonitor.WriteEdidOverride();
-
                 this.showRestartDialog("The screen size for " + this.selectedMonitor.Name + " has been set to " + this.sliderToInches(this.slider.Value).ToString() + " inches. Restart your computer to see the changes.");
             }
             catch (Exception c)
@@ -102,8 +103,7 @@ namespace MetroScaler
 
         private double sliderToInches(double sliderVal)
         {
-            double round = 0.1;
-            return ((int)((MIN_INCHES + sliderVal * (MAX_INCHES - MIN_INCHES)) / round)) * round;
+            return Math.Round(MIN_INCHES + sliderVal * (MAX_INCHES - MIN_INCHES),1);
         }
         private double inchesToSlider(double inches)
         {
