@@ -35,16 +35,23 @@ namespace MetroScaler
 
         public MainWindow()
         {
-            InitializeComponent();
-            this.slider.Value = 5.0;
-
             allMonitors = EdidOverrideUtils.GetMonitorList();
 
-            foreach(EdidMonitor monitor in allMonitors)
+            if (allMonitors.Count > 0)
             {
-                this.monitors_combobox.ItemsSource = allMonitors;
-                this.monitors_combobox.SelectedIndex = 0;
+                InitializeComponent();
+                foreach (EdidMonitor monitor in allMonitors)
+                {
+                    this.monitors_combobox.ItemsSource = allMonitors;
+                    this.monitors_combobox.SelectedIndex = 0;
+                }
             }
+            else
+            {
+                MessageBoxResult result = MessageBox.Show("No active monitors could be found.", appName, MessageBoxButton.OK, MessageBoxImage.Warning);
+                this.Close();
+            }
+
         }
 
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
